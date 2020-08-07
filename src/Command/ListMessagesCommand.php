@@ -42,7 +42,7 @@ class ListMessagesCommand extends Command
             return 0;
         }
         $table = new Table($output);
-        $table->setHeaders(['Id', 'Resume', 'Active', 'Body', 'Published']);
+        $table->setHeaders(['Id', 'Active', 'Body', 'Published']);
         $table->addRows($data);
         $table->render();
         return 0;

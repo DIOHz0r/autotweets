@@ -18,11 +18,6 @@ class Message
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $resume;
-
-    /**
      * @ORM\Column(type="boolean")
      */
     private $active;
@@ -40,18 +35,6 @@ class Message
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getResume(): ?string
-    {
-        return $this->resume;
-    }
-
-    public function setResume(string $resume): self
-    {
-        $this->resume = $resume;
-
-        return $this;
     }
 
     public function getActive(): ?bool
