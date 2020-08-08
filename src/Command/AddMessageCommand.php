@@ -55,7 +55,7 @@ class AddMessageCommand extends Command
             $question->setErrorMessage('Value %s is invalid.');
             $question->setNormalizer(Closure::checkChoices());
             $answer = $helper->ask($input, $output, $question);
-            $input->setArgument('active', $answer);
+            $input->setArgument('active', $answer == 'yes');
         }
     }
 
