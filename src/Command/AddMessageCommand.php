@@ -28,6 +28,29 @@ class AddMessageCommand extends Command
         parent::__construct();
     }
 
+    /**
+     * @return \Closure
+     */
+    public static function notBlank(): \Closure
+    {
+        return function ($answer) {
+            if (!is_string($answer)) {
+                throw new \RuntimeException('Invalid value.');
+            }
+            return $answer;
+        };
+    }
+
+    /**
+     * @return \Closure
+     */
+    public static function trimValue(): \Closure
+    {
+        return function ($value) {
+            return $value ? trim($value) : null;
+        };
+    }
+
     protected function configure()
     {
         $this
@@ -43,16 +66,8 @@ class AddMessageCommand extends Command
         if (!$input->getArgument('body')) {
             $argument = $this->getDefinition()->getArgument('body');
             $question = new Question($argument->getDescription() . "\n");
-            $question->setNormalizer(function ($value) {
-                // $value can be null here
-                return $value ? trim($value) : null;
-            });
-            $question->setValidator(function ($answer) {
-                if (!is_string($answer)) {
-                    throw new \RuntimeException('Please give an answer.');
-                }
-                return $answer;
-            });
+            $question->setNormalizer(self::trimValue());
+            $question->setValidator(self::notBlank());
             $answer = $helper->ask($input, $output, $question);
             $input->setArgument('body', $answer);
         }
