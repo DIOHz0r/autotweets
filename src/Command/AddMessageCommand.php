@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Closure\Closure;
 use App\Entity\Message;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Console\Command\Command;
@@ -28,29 +29,6 @@ class AddMessageCommand extends Command
         parent::__construct();
     }
 
-    /**
-     * @return \Closure
-     */
-    public static function notBlank(): \Closure
-    {
-        return function ($answer) {
-            if (!is_string($answer)) {
-                throw new \RuntimeException('Invalid value.');
-            }
-            return $answer;
-        };
-    }
-
-    /**
-     * @return \Closure
-     */
-    public static function trimValue(): \Closure
-    {
-        return function ($value) {
-            return $value ? trim($value) : null;
-        };
-    }
-
     protected function configure()
     {
         $this
@@ -66,8 +44,8 @@ class AddMessageCommand extends Command
         if (!$input->getArgument('body')) {
             $argument = $this->getDefinition()->getArgument('body');
             $question = new Question($argument->getDescription() . "\n");
-            $question->setNormalizer(self::trimValue());
-            $question->setValidator(self::notBlank());
+            $question->setNormalizer(Closure::trimValue());
+            $question->setValidator(Closure::notBlank());
             $answer = $helper->ask($input, $output, $question);
             $input->setArgument('body', $answer);
         }
@@ -75,13 +53,7 @@ class AddMessageCommand extends Command
         if (!$input->getArgument('active')) {
             $question = new ChoiceQuestion($argument->getDescription() . "\n", ['no', 'yes']);
             $question->setErrorMessage('Value %s is invalid.');
-            $question->setNormalizer(function ($value) {
-                // $value can be null here
-                if ($value != 1 && $value != 0) {
-                    return null;
-                }
-                return $value;
-            });
+            $question->setNormalizer(Closure::checkChoices());
             $answer = $helper->ask($input, $output, $question);
             $input->setArgument('active', $answer);
         }
