@@ -29,3 +29,10 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Service\TwitterClient:
+        arguments:
+            - key: '%env(resolve:TWTR_CONSUMER_KEY)%'
+              secret: '%env(resolve:TWTR_CONSUMER_SECRET)%'
+            - token: '%env(resolve:TWTR_ACCESS_TOKEN)%'
+              secret: '%env(resolve:TWTR_ACCESS_TOKEN_SECRET)%'
