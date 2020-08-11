@@ -36,15 +36,24 @@ class MessageRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?Message
+    public function nextRandomMsg($value): ?Message
     {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $builder = $this->createQueryBuilder('m')
+            ->andWhere('m.published <= :val')
+            ->orWhere('m.published is NULL')
+            ->setParameter('val', $value);
+
+        $totalRecords = $builder->select('COUNT(m)')
+            ->getQuery()->getSingleScalarResult();
+
+        if ($totalRecords < 1) {
+            return null;
+        }
+        $rowToFetch = rand(0, $totalRecords - 1);
+
+        return $builder->select('m')->getQuery()
+            ->setMaxResults(1)
+            ->setFirstResult($rowToFetch)
+            ->getOneOrNullResult();
     }
-    */
 }
