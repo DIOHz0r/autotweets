@@ -39,8 +39,8 @@ class MessageRepository extends ServiceEntityRepository
     public function nextRandomMsg($value): ?Message
     {
         $builder = $this->createQueryBuilder('m')
-            ->andWhere('m.published <= :val')
-            ->orWhere('m.published is NULL')
+            ->where('m.active = 1')
+            ->andWhere('m.published <= :val OR m.published is NULL')
             ->setParameter('val', $value);
 
         $totalRecords = $builder->select('COUNT(m)')
@@ -49,7 +49,7 @@ class MessageRepository extends ServiceEntityRepository
         if ($totalRecords < 1) {
             return null;
         }
-        $rowToFetch = rand(0, $totalRecords - 1);
+        $rowToFetch = mt_rand(1, $totalRecords - 1);
 
         return $builder->select('m')->getQuery()
             ->setMaxResults(1)

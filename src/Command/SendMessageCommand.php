@@ -56,7 +56,8 @@ class SendMessageCommand extends Command
         if ($id) {
             $msg = $repository->find($id);
         } else {
-            $msg = $repository->nextRandomMsg(strtotime('-5 day'));
+            $fromDate = date('Y-m-d H:i:s', strtotime('-5 day'));
+            $msg = $repository->nextRandomMsg($fromDate);
         }
 
         if (!$msg) {
