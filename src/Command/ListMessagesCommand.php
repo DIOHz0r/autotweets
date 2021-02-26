@@ -41,6 +41,12 @@ class ListMessagesCommand extends Command
             $io->writeln('No messages found');
             return 0;
         }
+        foreach ($data as $key => $msg) {
+            if(!$msg['published']) {
+                continue;
+            }
+            $data[$key]['published'] = $msg['published']->format('Y-m-d h:i:s');
+        }
         $table = new Table($output);
         $table->setHeaders(['Id', 'Active', 'Body', 'Published']);
         $table->addRows($data);
