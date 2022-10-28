@@ -1,0 +1,19 @@
+version: '3.5'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: .Docker/php.Dockerfile
+    container_name: autotweet
+    environment:
+      - XDEBUG_MODE=${XDEBUG_MODE:-off}
+    expose:
+      - "9003"
+    volumes:
+      - ./:/app
+    working_dir: /app
+    command: /app/.Docker/start-container.sh
+
+volumes:
+  app-data:
