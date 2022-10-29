@@ -42,10 +42,11 @@ class ListMessagesCommand extends Command
             return 0;
         }
         foreach ($data as $key => $msg) {
-            if(!$msg['published']) {
-                continue;
+            if (!$msg['published']) {
+                $data[$key]['published'] = '';
+            } else {
+                $data[$key]['published'] = $msg['published']->format('Y-m-d h:i:s');
             }
-            $data[$key]['published'] = $msg['published']->format('Y-m-d h:i:s');
         }
         $table = new Table($output);
         $table->setHeaders(['Id', 'Active', 'Body', 'Published']);
