@@ -13,7 +13,6 @@ services:
     volumes:
       - ./:/app
     working_dir: /app
-    command: /app/.Docker/start-container.sh
 
 volumes:
   app-data:
